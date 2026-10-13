@@ -1,0 +1,6 @@
+{
+  "name": "BakeLearn MM",
+  "description": "မုန့်ဖုတ်ပညာရပ်နှင့် ကိတ်မုန့်လုပ်နည်းများကို အော့ဖ်လိုင်းလေ့လာသင်ယူနိုင်သော မြန်မာဘာသာ မုန့်ဖုတ်လက်စွဲ PWA (Baking Learning & Recipe Guide in Burmese)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

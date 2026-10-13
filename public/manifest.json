@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "BakeLearn MM - မုန့်ဖုတ်သင်ယူလက်စွဲ",
+  "short_name": "BakeLearn MM",
+  "description": "မုန့်ဖုတ်ပညာရပ်နှင့် ကိတ်မုန့်လုပ်နည်းများကို အော့ဖ်လိုင်းလေ့လာသင်ယူနိုင်သော မြန်မာဘာသာ မုန့်ဖုတ်လက်စွဲ PWA",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fffbeb",
+  "theme_color": "#ea580c",
+  "categories": ["education", "food", "lifestyle"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
