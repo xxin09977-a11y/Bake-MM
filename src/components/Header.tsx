@@ -8,8 +8,6 @@ import {
   Home, 
   Wheat, 
   UtensilsCrossed, 
-  Bot, 
-  GraduationCap, 
   Timer,
   Sun,
   Moon
@@ -33,54 +31,42 @@ export const Header: React.FC<HeaderProps> = ({
   isDark,
   onToggleDarkMode,
 }) => {
-  // Requirement 1: KEEP all UI, menus, buttons, labels in English only.
+  // Navigation tabs in clean English UI
   const navItems: { id: NavigationTab; label: string; icon: React.ReactNode }[] = [
     { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { id: 'ingredients', label: 'Ingredients', icon: <Wheat className="w-4 h-4" /> },
     { id: 'tools', label: 'Tools', icon: <UtensilsCrossed className="w-4 h-4" /> },
-    { id: 'chat', label: 'AI Chat', icon: <Bot className="w-4 h-4" /> },
-    { id: 'learn', label: 'Learn', icon: <GraduationCap className="w-4 h-4" /> },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border-b border-orange-100 dark:border-stone-800 shadow-xs transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-18">
+    <header className="sticky top-0 z-40 bg-white/70 dark:bg-[#0c0f17]/70 backdrop-blur-xl border-b border-black/[0.08] dark:border-white/10 transition-colors w-full max-w-full overflow-hidden shadow-xs">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-2">
           {/* Logo & Brand */}
           <div 
             onClick={() => onSelectTab('home')}
-            className="flex items-center gap-2.5 cursor-pointer select-none group"
+            className="flex items-center gap-2.5 cursor-pointer select-none group shrink-0 min-w-0"
           >
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-linear-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
-              <span className="text-xl sm:text-2xl">👩‍🍳</span>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-bold text-sm sm:text-base shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              BL
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-stone-900 dark:text-white tracking-tight text-lg sm:text-xl">
-                  BakeLearn
-                </span>
-                <span className="px-1.5 py-0.5 text-xs font-bold text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-950 rounded-md">
-                  PRO
-                </span>
-              </div>
-              <p className="text-xs text-stone-500 dark:text-stone-400 -mt-0.5 hidden xs:block">
-                Baking Companion (Offline)
-              </p>
-            </div>
+            <span className="font-extrabold text-black dark:text-white tracking-tight text-base sm:text-lg uppercase">
+              BakeLearn
+            </span>
           </div>
 
-          {/* Desktop Navigation with requested labels */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.06] backdrop-blur-md">
             {navItems.map(item => {
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-bold transition cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-orange-600 text-white shadow-xs'
-                      : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white hover:bg-orange-50/80 dark:hover:bg-stone-800'
+                      ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                      : 'text-[#737373] dark:text-[#A3A3A3] hover:text-black dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.07]'
                   }`}
                 >
                   {item.icon}
@@ -90,38 +76,38 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Right Actions: Content Language Toggle, Dark Mode Toggle, Timer, Install */}
-          <div className="flex items-center gap-2">
-            {/* Global Content Language Toggle (English | မြန်မာ) */}
+          {/* Right Actions: Language, Dark Mode, Timer, Install */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Content Language Toggle */}
             <ContentLanguageToggle />
 
-            {/* Dark Mode Toggle Button */}
+            {/* Dark Mode Toggle Button - Frosted glass stroke */}
             <button
               onClick={onToggleDarkMode}
-              className="p-2 sm:px-3 sm:py-1.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 hover:bg-stone-100 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-200 text-xs font-bold transition cursor-pointer flex items-center gap-1.5"
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-black/[0.08] dark:border-white/10 bg-white/40 dark:bg-white/[0.04] hover:bg-white/80 dark:hover:bg-white/[0.1] text-black dark:text-white text-xs font-bold transition-all backdrop-blur-md cursor-pointer flex items-center gap-1.5 shrink-0 shadow-xs"
               title={isDark ? 'Switch to Light mode' : 'Switch to Dark mode'}
             >
               {isDark ? (
                 <>
-                  <Sun className="w-4 h-4 text-amber-400" />
-                  <span className="hidden sm:inline">Light</span>
+                  <Sun className="w-3.5 h-3.5 shrink-0" />
+                  <span className="hidden sm:inline font-mono text-[11px]">LIGHT</span>
                 </>
               ) : (
                 <>
-                  <Moon className="w-4 h-4 text-stone-600" />
-                  <span className="hidden sm:inline">Dark</span>
+                  <Moon className="w-3.5 h-3.5 shrink-0" />
+                  <span className="hidden sm:inline font-mono text-[11px]">DARK</span>
                 </>
               )}
             </button>
 
-            {/* Timer Button */}
+            {/* Timer Button - Frosted glass stroke */}
             <button
               onClick={onOpenTimer}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-orange-200 dark:border-stone-700 bg-orange-50/80 dark:bg-stone-800 hover:bg-orange-100 dark:hover:bg-stone-700 text-orange-800 dark:text-orange-300 text-xs font-bold transition cursor-pointer"
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-black/[0.08] dark:border-white/10 bg-white/40 dark:bg-white/[0.04] hover:bg-white/80 dark:hover:bg-white/[0.1] text-black dark:text-white text-xs font-bold transition-all backdrop-blur-md cursor-pointer flex items-center gap-1.5 shrink-0 shadow-xs"
               title="Open Baking Timer"
             >
-              <Timer className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-              <span className="hidden sm:inline">Timer</span>
+              <Timer className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden sm:inline font-mono text-[11px]">TIMER</span>
             </button>
 
             <PWAInstallButton />

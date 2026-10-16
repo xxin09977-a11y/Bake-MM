@@ -59,53 +59,101 @@ export function runBilingualMigration() {
   if (Array.isArray(storedIngredients) && storedIngredients.length > 0) {
     let hasChanges = false;
     const migrated = storedIngredients.map(item => {
-      const defaultItem = DEFAULT_INGREDIENTS.find(d => d.id === item.id);
-      if (!defaultItem) return item;
+      const defaultItem = DEFAULT_INGREDIENTS.find(d => 
+        d.id === item.id || 
+        (item.name_en && d.name_en && d.name_en.toLowerCase() === item.name_en.toLowerCase()) ||
+        (item.name && d.name_en && d.name_en.toLowerCase() === item.name.toLowerCase()) ||
+        (item.nameEn && d.name_en && d.name_en.toLowerCase() === item.nameEn.toLowerCase()) ||
+        (item.nameMm && d.name_mm && d.name_mm === item.nameMm) ||
+        (item.name_mm && d.name_mm && d.name_mm === item.name_mm)
+      );
 
       let itemModified = false;
       const patched = { ...item };
 
-      // Ensure _mm fields exist
-      if (!patched.name_mm && defaultItem.name_mm) {
-        patched.name_mm = defaultItem.name_mm;
+      // Normalize legacy field keys
+      if (!patched.name_en && (patched.name || patched.nameEn)) {
+        patched.name_en = patched.name_en || patched.name || patched.nameEn;
         itemModified = true;
       }
-      if (!patched.uses_mm && defaultItem.uses_mm) {
-        patched.uses_mm = defaultItem.uses_mm;
+      if (!patched.name_mm && patched.nameMm) {
+        patched.name_mm = patched.nameMm;
         itemModified = true;
       }
-      if ((!patched.substitutes_mm || patched.substitutes_mm.length === 0) && defaultItem.substitutes_mm) {
-        patched.substitutes_mm = defaultItem.substitutes_mm;
+      if (!patched.uses_en && (patched.uses || patched.usesEn)) {
+        patched.uses_en = patched.uses || patched.usesEn;
         itemModified = true;
       }
-      if (!patched.storage_mm && defaultItem.storage_mm) {
-        patched.storage_mm = defaultItem.storage_mm;
-        itemModified = true;
-      }
-      if (!patched.nutrition_mm && (defaultItem.nutrition_mm || defaultItem.nutrition_short)) {
-        patched.nutrition_mm = defaultItem.nutrition_mm || defaultItem.nutrition_short;
+      if (!patched.uses_mm && patched.usesMm) {
+        patched.uses_mm = patched.usesMm;
         itemModified = true;
       }
 
-      // Ensure _en fields exist
-      if (!patched.name_en && defaultItem.name_en) {
-        patched.name_en = defaultItem.name_en;
+      // Ensure _mm fields exist from defaultItem
+      if (defaultItem) {
+        if (!patched.name_mm && defaultItem.name_mm) {
+          patched.name_mm = defaultItem.name_mm;
+          itemModified = true;
+        }
+        if (!patched.uses_mm && defaultItem.uses_mm) {
+          patched.uses_mm = defaultItem.uses_mm;
+          itemModified = true;
+        }
+        if ((!patched.substitutes_mm || patched.substitutes_mm.length === 0) && defaultItem.substitutes_mm) {
+          patched.substitutes_mm = defaultItem.substitutes_mm;
+          itemModified = true;
+        }
+        if (!patched.storage_mm && defaultItem.storage_mm) {
+          patched.storage_mm = defaultItem.storage_mm;
+          itemModified = true;
+        }
+        if (!patched.nutrition_mm && (defaultItem.nutrition_mm || defaultItem.nutrition_short)) {
+          patched.nutrition_mm = defaultItem.nutrition_mm || defaultItem.nutrition_short;
+          itemModified = true;
+        }
+
+        // Ensure _en fields exist from defaultItem
+        if (!patched.name_en && defaultItem.name_en) {
+          patched.name_en = defaultItem.name_en;
+          itemModified = true;
+        }
+        if (!patched.uses_en && defaultItem.uses_en) {
+          patched.uses_en = defaultItem.uses_en;
+          itemModified = true;
+        }
+        if ((!patched.substitutes_en || patched.substitutes_en.length === 0) && defaultItem.substitutes_en) {
+          patched.substitutes_en = defaultItem.substitutes_en;
+          itemModified = true;
+        }
+        if (!patched.storage_en && defaultItem.storage_en) {
+          patched.storage_en = defaultItem.storage_en;
+          itemModified = true;
+        }
+        if (!patched.nutrition_en && defaultItem.nutrition_en) {
+          patched.nutrition_en = defaultItem.nutrition_en;
+          itemModified = true;
+        }
+      }
+
+      // Fallback for custom user items
+      if (!patched.name_mm) {
+        patched.name_mm = patched.name_en || patched.name || 'မုန့်ဖုတ်ပါဝင်ပစ္စည်း';
         itemModified = true;
       }
-      if (!patched.uses_en && defaultItem.uses_en) {
-        patched.uses_en = defaultItem.uses_en;
+      if (!patched.uses_mm) {
+        patched.uses_mm = patched.uses_en || 'မုန့်ဖုတ်ရာတွင် သုံးသည်';
         itemModified = true;
       }
-      if ((!patched.substitutes_en || patched.substitutes_en.length === 0) && defaultItem.substitutes_en) {
-        patched.substitutes_en = defaultItem.substitutes_en;
+      if (!patched.substitutes_mm) {
+        patched.substitutes_mm = patched.substitutes_en || [];
         itemModified = true;
       }
-      if (!patched.storage_en && defaultItem.storage_en) {
-        patched.storage_en = defaultItem.storage_en;
+      if (!patched.storage_mm) {
+        patched.storage_mm = patched.storage_en || 'အေးမြခြောက်သွေ့သောနေရာတွင် ထားပါ';
         itemModified = true;
       }
-      if (!patched.nutrition_en && defaultItem.nutrition_en) {
-        patched.nutrition_en = defaultItem.nutrition_en;
+      if (!patched.nutrition_mm) {
+        patched.nutrition_mm = patched.nutrition_en || '';
         itemModified = true;
       }
 
@@ -123,53 +171,101 @@ export function runBilingualMigration() {
   if (Array.isArray(storedTools) && storedTools.length > 0) {
     let hasChanges = false;
     const migrated = storedTools.map(item => {
-      const defaultItem = DEFAULT_TOOLS.find(d => d.id === item.id);
-      if (!defaultItem) return item;
+      const defaultItem = DEFAULT_TOOLS.find(d => 
+        d.id === item.id || 
+        (item.name_en && d.name_en && d.name_en.toLowerCase() === item.name_en.toLowerCase()) ||
+        (item.name && d.name_en && d.name_en.toLowerCase() === item.name.toLowerCase()) ||
+        (item.nameEn && d.name_en && d.name_en.toLowerCase() === item.nameEn.toLowerCase()) ||
+        (item.nameMm && d.name_mm && d.name_mm === item.nameMm) ||
+        (item.name_mm && d.name_mm && d.name_mm === item.name_mm)
+      );
 
       let itemModified = false;
       const patched = { ...item };
 
-      // Ensure _mm fields
-      if (!patched.name_mm && defaultItem.name_mm) {
-        patched.name_mm = defaultItem.name_mm;
+      // Normalize legacy field keys
+      if (!patched.name_en && (patched.name || patched.nameEn)) {
+        patched.name_en = patched.name_en || patched.name || patched.nameEn;
         itemModified = true;
       }
-      if (!patched.purpose_mm && defaultItem.purpose_mm) {
-        patched.purpose_mm = defaultItem.purpose_mm;
+      if (!patched.name_mm && patched.nameMm) {
+        patched.name_mm = patched.nameMm;
         itemModified = true;
       }
-      if (!patched.how_to_use_mm && defaultItem.how_to_use_mm) {
-        patched.how_to_use_mm = defaultItem.how_to_use_mm;
+      if (!patched.purpose_en && (patched.purpose || patched.purposeEn)) {
+        patched.purpose_en = patched.purpose || patched.purposeEn;
         itemModified = true;
       }
-      if (!patched.care_mm && defaultItem.care_mm) {
-        patched.care_mm = defaultItem.care_mm;
-        itemModified = true;
-      }
-      if ((!patched.alternatives_mm || patched.alternatives_mm.length === 0) && defaultItem.alternatives_mm) {
-        patched.alternatives_mm = defaultItem.alternatives_mm;
+      if (!patched.purpose_mm && patched.purposeMm) {
+        patched.purpose_mm = patched.purposeMm;
         itemModified = true;
       }
 
-      // Ensure _en fields
-      if (!patched.name_en && defaultItem.name_en) {
-        patched.name_en = defaultItem.name_en;
+      // Ensure _mm fields from defaultItem
+      if (defaultItem) {
+        if (!patched.name_mm && defaultItem.name_mm) {
+          patched.name_mm = defaultItem.name_mm;
+          itemModified = true;
+        }
+        if (!patched.purpose_mm && defaultItem.purpose_mm) {
+          patched.purpose_mm = defaultItem.purpose_mm;
+          itemModified = true;
+        }
+        if (!patched.how_to_use_mm && defaultItem.how_to_use_mm) {
+          patched.how_to_use_mm = defaultItem.how_to_use_mm;
+          itemModified = true;
+        }
+        if (!patched.care_mm && defaultItem.care_mm) {
+          patched.care_mm = defaultItem.care_mm;
+          itemModified = true;
+        }
+        if ((!patched.alternatives_mm || patched.alternatives_mm.length === 0) && defaultItem.alternatives_mm) {
+          patched.alternatives_mm = defaultItem.alternatives_mm;
+          itemModified = true;
+        }
+
+        // Ensure _en fields from defaultItem
+        if (!patched.name_en && defaultItem.name_en) {
+          patched.name_en = defaultItem.name_en;
+          itemModified = true;
+        }
+        if (!patched.purpose_en && defaultItem.purpose_en) {
+          patched.purpose_en = defaultItem.purpose_en;
+          itemModified = true;
+        }
+        if (!patched.how_to_use_en && defaultItem.how_to_use_en) {
+          patched.how_to_use_en = defaultItem.how_to_use_en;
+          itemModified = true;
+        }
+        if (!patched.care_en && defaultItem.care_en) {
+          patched.care_en = defaultItem.care_en;
+          itemModified = true;
+        }
+        if ((!patched.alternatives_en || patched.alternatives_en.length === 0) && defaultItem.alternatives_en) {
+          patched.alternatives_en = defaultItem.alternatives_en;
+          itemModified = true;
+        }
+      }
+
+      // Fallback for custom user tools
+      if (!patched.name_mm) {
+        patched.name_mm = patched.name_en || patched.name || 'မုန့်ဖုတ်ကိရိယာ';
         itemModified = true;
       }
-      if (!patched.purpose_en && defaultItem.purpose_en) {
-        patched.purpose_en = defaultItem.purpose_en;
+      if (!patched.purpose_mm) {
+        patched.purpose_mm = patched.purpose_en || 'မုန့်ဖုတ်ရာတွင် အသုံးပြုရန်';
         itemModified = true;
       }
-      if (!patched.how_to_use_en && defaultItem.how_to_use_en) {
-        patched.how_to_use_en = defaultItem.how_to_use_en;
+      if (!patched.how_to_use_mm) {
+        patched.how_to_use_mm = patched.how_to_use_en || 'သန့်ရှင်းစွာ အသုံးပြုပါ';
         itemModified = true;
       }
-      if (!patched.care_en && defaultItem.care_en) {
-        patched.care_en = defaultItem.care_en;
+      if (!patched.care_mm) {
+        patched.care_mm = patched.care_en || 'ဆေးကြောပြီး ခြောက်သွေ့အောင်ထားပါ';
         itemModified = true;
       }
-      if ((!patched.alternatives_en || patched.alternatives_en.length === 0) && defaultItem.alternatives_en) {
-        patched.alternatives_en = defaultItem.alternatives_en;
+      if (!patched.alternatives_mm) {
+        patched.alternatives_mm = patched.alternatives_en || [];
         itemModified = true;
       }
 
@@ -246,6 +342,82 @@ export function saveTools(tools) {
   safeSet(STORAGE_KEYS.BAKE_TOOLS, Array.isArray(tools) ? tools : []);
 }
 
+// Re-export STORAGE_KEYS with extended app keys
+export const APP_STORAGE_KEYS = {
+  ...STORAGE_KEYS,
+  BAKE_LESSONS_COMPLETED: 'bake_lessons_completed',
+  BAKE_BOOKMARKS: 'bake_bookmarks',
+  BAKE_OWNED_TOOLS: 'bake_owned_tools',
+  BAKE_NOTES: 'bake_notes',
+};
+export { APP_STORAGE_KEYS as STORAGE_KEYS };
+
+/**
+ * Get completed lesson IDs
+ * @returns {string[]}
+ */
+export function getCompletedLessons() {
+  return safeGet(APP_STORAGE_KEYS.BAKE_LESSONS_COMPLETED, []);
+}
+
+/**
+ * Toggle lesson completed state
+ * @param {string} id 
+ * @returns {string[]}
+ */
+export function toggleLessonCompleted(id) {
+  const current = getCompletedLessons();
+  const updated = current.includes(id)
+    ? current.filter(item => item !== id)
+    : [...current, id];
+  safeSet(APP_STORAGE_KEYS.BAKE_LESSONS_COMPLETED, updated);
+  return updated;
+}
+
+/**
+ * Get bookmarked recipe/item IDs
+ * @returns {string[]}
+ */
+export function getBookmarks() {
+  return safeGet(APP_STORAGE_KEYS.BAKE_BOOKMARKS, []);
+}
+
+/**
+ * Toggle bookmark state
+ * @param {string} id 
+ * @returns {string[]}
+ */
+export function toggleBookmark(id) {
+  const current = getBookmarks();
+  const updated = current.includes(id)
+    ? current.filter(item => item !== id)
+    : [...current, id];
+  safeSet(APP_STORAGE_KEYS.BAKE_BOOKMARKS, updated);
+  return updated;
+}
+
+/**
+ * Get kitchen owned tool IDs
+ * @returns {string[]}
+ */
+export function getOwnedTools() {
+  return safeGet(APP_STORAGE_KEYS.BAKE_OWNED_TOOLS, ['digital-scale', 'whisk', 'spatula']);
+}
+
+/**
+ * Toggle owned tool state
+ * @param {string} id 
+ * @returns {string[]}
+ */
+export function toggleOwnedTool(id) {
+  const current = getOwnedTools();
+  const updated = current.includes(id)
+    ? current.filter(item => item !== id)
+    : [...current, id];
+  safeSet(APP_STORAGE_KEYS.BAKE_OWNED_TOOLS, updated);
+  return updated;
+}
+
 export default {
   getIngredients,
   saveIngredients,
@@ -254,4 +426,12 @@ export default {
   seedIfEmpty,
   initSettings,
   runBilingualMigration,
+  getCompletedLessons,
+  toggleLessonCompleted,
+  getBookmarks,
+  toggleBookmark,
+  getOwnedTools,
+  toggleOwnedTool,
+  STORAGE_KEYS: APP_STORAGE_KEYS,
 };
+

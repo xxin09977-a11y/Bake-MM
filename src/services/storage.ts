@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BakingLogEntry, ChatMessage } from '../types';
+import { BakingLogEntry } from '../types';
 
 const STORAGE_KEYS = {
   BOOKMARKS: 'bakelearn_bookmarks',
@@ -11,7 +11,6 @@ const STORAGE_KEYS = {
   OWNED_TOOLS: 'bakelearn_owned_tools',
   COMPLETED_LESSONS: 'bakelearn_completed_lessons',
   BAKING_LOGS: 'bakelearn_baking_logs',
-  CHAT_HISTORY: 'bakelearn_chat_history',
   QUICK_NOTES: 'bakelearn_quick_notes',
 } as const;
 
@@ -144,30 +143,6 @@ export const StorageService = {
   deleteBakingLog(id: string): void {
     const logs = this.getBakingLogs().filter(log => log.id !== id);
     this.setBakingLogs(logs);
-  },
-
-  // Chat History
-  getChatHistory(): ChatMessage[] {
-    return safeGet<ChatMessage[]>(STORAGE_KEYS.CHAT_HISTORY, [
-      {
-        id: 'msg_welcome',
-        sender: 'assistant',
-        timestamp: Date.now() - 3600000,
-        textMm: 'မင်္ဂလာပါ! ကျွန်မက မုန့်ဖုတ်ပညာရှင် အကူ Chef Thida ဖြစ်ပါတယ်။ မုန့်ဖုတ်နည်းများ၊ ပါဝင်ပစ္စည်း အစားထိုးနည်းများနှင့် မုန့်မအောင်မြင်သော ပြဿနာများကို ၁၀၀% အော့ဖ်လိုင်း မေးမြန်းနိုင်ပါတယ်ရှင်။ ဘာများ သိချင်ပါသလဲရှင့်?',
-        suggestions: [
-          'ကိတ်မုန့် အလယ်ကျွံရတဲ့ အကြောင်းရင်း',
-          'Cake Flour မရှိရင် ဘာအစားထိုးမလဲ',
-          'မုန့်ဖုတ်ချိန် မီးဖိုအပူချိန် ညှိနည်း',
-          'ထောပတ်အစား ဆီသုံးလို့ရသလား',
-        ],
-      },
-    ]);
-  },
-  setChatHistory(messages: ChatMessage[]): void {
-    safeSet(STORAGE_KEYS.CHAT_HISTORY, messages);
-  },
-  clearChatHistory(): void {
-    safeSet(STORAGE_KEYS.CHAT_HISTORY, []);
   },
 
   // Quick Notes

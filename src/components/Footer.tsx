@@ -4,36 +4,30 @@
  */
 
 import React from 'react';
-import { Heart, Sparkles, WifiOff, ShieldCheck } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="mt-16 border-t border-orange-100/80 bg-white/60 py-10 pb-24 md:pb-10 text-stone-600 text-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-          <div className="space-y-1">
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <span className="font-extrabold text-stone-900 dark:text-white text-sm">BakeLearn</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-semibold flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" />
-                100% Offline Ready
+    <footer className="mt-12 sm:mt-16 border-t border-black/[0.08] dark:border-white/10 bg-white/40 dark:bg-[#0c0f17]/40 backdrop-blur-lg py-8 pb-24 md:pb-8 text-[#737373] text-xs w-full max-w-full overflow-hidden">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left min-w-0">
+          <div className="space-y-1 min-w-0">
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <span className="font-extrabold text-black dark:text-white text-sm tracking-tight uppercase">
+                BakeLearn
               </span>
+              <span className="text-[10px] font-mono text-[#A3A3A3]">v2.0</span>
             </div>
-            <p className="text-stone-500 dark:text-stone-400">
-              Your offline baking companion for mastering pastry science, tools, and ingredients.
+            <p className="text-[#737373] dark:text-[#A3A3A3] text-xs break-words">
+              Your baking companion for mastering pastry science, tools, and ingredients.
             </p>
           </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-3 text-stone-500 dark:text-stone-400 text-xs">
-            <span className="flex items-center gap-1">
-              <WifiOff className="w-3.5 h-3.5 text-orange-600" />
-              Stored Locally in Browser
-            </span>
-            <span>•</span>
-            <span>Bilingual Content (English & Myanmar)</span>
+          <div className="text-[11px] font-mono text-[#737373] dark:text-[#A3A3A3]">
+            100% Offline PWA · Zero Internet Required
           </div>
         </div>
       </div>
     </footer>
   );
 };
+
+export default Footer;

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type NavigationTab = 'home' | 'ingredients' | 'tools' | 'chat' | 'learn';
+export type NavigationTab = 'home' | 'ingredients' | 'tools';
 
 export interface IngredientItem {
   id: string;
@@ -124,19 +124,13 @@ export interface BakingLogEntry {
   notesMm: string;
 }
 
-export interface ChatMessage {
-  id: string;
-  sender: 'user' | 'assistant';
-  timestamp: number;
-  textMm: string;
-  suggestions?: string[];
-  category?: 'troubleshoot' | 'substitution' | 'recipe' | 'temperature' | 'general';
-}
-
 export interface QuizQuestion {
   id: string;
   questionMm: string;
+  questionEn?: string;
   optionsMm: string[];
+  optionsEn?: string[];
   correctIndex: number;
   explanationMm: string;
+  explanationEn?: string;
 }

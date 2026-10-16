@@ -40,24 +40,20 @@ export const OfflineIndicator: React.FC = () => {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold shadow-lg backdrop-blur-md transition-all ${
-        isOnline
-          ? 'bg-emerald-600/95 text-white'
-          : 'bg-amber-600/95 text-white border border-amber-400'
-      }`}
+      className="fixed bottom-16 md:bottom-4 right-4 z-50 flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-mono font-bold bg-white/85 dark:bg-[#0c0f17]/85 backdrop-blur-xl text-black dark:text-white border border-black/10 dark:border-white/15 transition-all shadow-lg"
     >
       {isOnline ? (
         <>
-          <Wifi className="w-4 h-4 text-emerald-200" />
-          <span>Connected Online</span>
+          <Wifi className="w-4 h-4 shrink-0" />
+          <span>ONLINE</span>
         </>
       ) : (
         <>
-          <WifiOff className="w-4 h-4 text-amber-200 animate-pulse" />
+          <WifiOff className="w-4 h-4 shrink-0" />
           <div className="flex flex-col">
-            <span>Offline Mode</span>
-            <span className="text-[10px] text-amber-100 font-normal">
-              Fully operational with offline local storage
+            <span>OFFLINE ACTIVE</span>
+            <span className="text-[10px] text-[#737373] dark:text-[#A3A3A3] font-normal">
+              Zero network required
             </span>
           </div>
         </>
@@ -68,9 +64,9 @@ export const OfflineIndicator: React.FC = () => {
 
 export const OfflineBadge: React.FC = () => {
   return (
-    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100/90 text-amber-900 border border-amber-200/80">
-      <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
-      <span>100% Offline (No Internet Needed)</span>
+    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-white/50 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white border border-black/[0.08] dark:border-white/10 shadow-xs">
+      <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+      <span>100% Offline Guide</span>
     </div>
   );
 };

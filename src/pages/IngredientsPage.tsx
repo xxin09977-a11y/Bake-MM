@@ -22,7 +22,6 @@ import { getIngredients, saveIngredients, seedIfEmpty } from '../lib/storage.js'
 import { DEFAULT_INGREDIENTS } from '../data/schema.js';
 import { IngredientItem } from '../types';
 import { useContentLanguage } from '../context/LanguageContext';
-import { ContentLanguageToggle } from '../components/ContentLanguageToggle';
 
 // Bilingual search match helper: matches English or Burmese text
 function bilingualSearchMatch(item: IngredientItem, query: string): boolean {
@@ -300,40 +299,42 @@ export const IngredientsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-5 sm:space-y-6 animate-in fade-in duration-150 w-full max-w-full overflow-hidden">
       {/* Toast alert */}
       {toastMessage && (
-        <div className="fixed top-20 right-4 z-50 bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="fixed top-20 right-4 z-50 bg-black text-white dark:bg-white dark:text-black text-xs font-mono font-bold px-4 py-2.5 rounded-md border border-black dark:border-white flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-150">
           <Check className="w-4 h-4" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-white tracking-tight">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-extrabold uppercase tracking-wide text-black dark:text-white">
               Baking Ingredients
             </h1>
-            <ContentLanguageToggle />
+            <span className="px-2 py-0.5 rounded-sm text-[11px] font-mono font-bold uppercase tracking-wider bg-[#F5F5F5] dark:bg-[#171717] border border-[#E5E5E5] dark:border-[#262626] text-[#737373] dark:text-[#A3A3A3]">
+              {ingredientsList.length} Items
+            </span>
           </div>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
-            Explore 25 core baking ingredients, roles, smart substitutions, and storage guidelines.
+          <p className="text-xs sm:text-sm text-[#737373] mt-1 break-words">
+            Explore 25 core baking ingredients, roles, reliable substitutions, and storage guidelines.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
           <button
             onClick={handleResetDefaults}
-            className="p-2.5 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 text-stone-600 dark:text-stone-300 text-xs font-semibold transition cursor-pointer"
+            className="p-2 sm:p-2.5 rounded-md border border-[#E5E5E5] dark:border-[#262626] bg-transparent hover:bg-[#F5F5F5] dark:hover:bg-[#171717] text-black dark:text-white text-xs font-semibold transition-colors cursor-pointer"
             title="Restore default ingredients library"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
           <button
             onClick={handleOpenAdd}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow transition active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-md bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-xs font-mono font-bold uppercase tracking-wider transition-colors active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Add Ingredient</span>
@@ -341,143 +342,147 @@ export const IngredientsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Search Bar matching both name_en and name_mm */}
-      <div className="relative">
-        <Search className="absolute left-3.5 top-3 w-4 h-4 text-stone-400" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Search by English or Burmese name (e.g. Cake flour, ဂျုံ, Butter, ထောပတ်, Baking soda)..."
-          className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs sm:text-sm text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-hidden focus:border-orange-500 shadow-2xs"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery('')}
-            className="absolute right-3.5 top-3 text-stone-400 hover:text-stone-700 text-xs"
-          >
-            ✕
-          </button>
-        )}
-      </div>
+      {/* Cohesive Sticky Header Section: Search, Quick Chips, Category Tabs */}
+      <div className="sticky top-14 sm:top-16 z-30 bg-white/70 dark:bg-[#0c0f17]/75 backdrop-blur-xl pt-2.5 pb-3.5 space-y-2.5 border-b border-black/[0.08] dark:border-white/10 -mx-3.5 sm:-mx-6 lg:-mx-8 px-3.5 sm:px-6 lg:px-8 shadow-xs">
+        {/* Search Bar matching both name_en and name_mm */}
+        <div className="relative">
+          <Search className="absolute left-3.5 top-3 w-4 h-4 text-[#737373]" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search by English or Burmese name (e.g. Cake flour, ဂျုံ, Butter, ထောပတ်, Baking soda)..."
+            className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-xs sm:text-sm text-black dark:text-white placeholder-[#737373] focus:outline-hidden focus:border-black dark:focus:border-white shadow-xs"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3.5 top-2.5 text-[#737373] hover:text-black dark:hover:text-white text-sm cursor-pointer p-0.5"
+              aria-label="Clear search query"
+            >
+              ✕
+            </button>
+          )}
+        </div>
 
-      {/* Quick Search Tag Chips */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-        <span className="text-[11px] font-bold text-stone-400 shrink-0">Quick Search:</span>
-        {[
-          { label: '🌾 Flour Comparison (ဂျုံ)', query: 'ဂျုံ' },
-          { label: '🧈 Butter (ထောပတ်)', query: 'butter' },
-          { label: '✨ Baking Powder (ဘိတ်ကင်ပေါင်ဒါ)', query: 'baking powder' },
-          { label: '🧂 Baking Soda (ဆိုဒါ)', query: 'soda' },
-          { label: '🌼 Vanilla (ဗနီလာ)', query: 'vanilla' },
-          { label: '🍫 Chocolate (ချောကလက်)', query: 'chocolate' },
-        ].map(tag => (
-          <button
-            key={tag.query}
-            onClick={() => {
-              setSearchQuery(tag.query);
-              setSelectedCategory('all');
-            }}
-            className={`px-2.5 py-1 rounded-xl text-[11px] font-semibold whitespace-nowrap transition cursor-pointer active:scale-95 ${
-              searchQuery === tag.query
-                ? 'bg-orange-600 text-white shadow-2xs'
-                : 'bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300'
-            }`}
-          >
-            {tag.label}
-          </button>
-        ))}
-      </div>
+        {/* Quick Search Tag Chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 no-scrollbar text-xs">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] shrink-0">Quick:</span>
+          {[
+            { label: 'Flour (ဂျုံ)', query: 'ဂျုံ' },
+            { label: 'Butter (ထောပတ်)', query: 'butter' },
+            { label: 'Baking Powder (ဘိတ်ကင်ပေါင်ဒါ)', query: 'baking powder' },
+            { label: 'Baking Soda (ဆိုဒါ)', query: 'soda' },
+            { label: 'Vanilla (ဗနီလာ)', query: 'vanilla' },
+            { label: 'Chocolate (ချောကလက်)', query: 'chocolate' },
+          ].map(tag => (
+            <button
+              key={tag.query}
+              onClick={() => {
+                setSearchQuery(tag.query);
+                setSelectedCategory('all');
+              }}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-mono uppercase whitespace-nowrap transition-all cursor-pointer ${
+                searchQuery === tag.query
+                  ? 'bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
+                  : 'border border-black/[0.08] dark:border-white/10 bg-white/40 dark:bg-white/[0.03] backdrop-blur-md hover:border-black/30 dark:hover:border-white/30 text-[#737373] dark:text-[#A3A3A3]'
+              }`}
+            >
+              {tag.label}
+            </button>
+          ))}
+        </div>
 
-      {/* Category Filter Chips */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-        {CATEGORY_OPTIONS.map(cat => (
-          <button
-            key={cat.id}
-            onClick={() => setSelectedCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-              selectedCategory === cat.id
-                ? 'bg-orange-500 text-white shadow-xs'
-                : 'bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-50'
-            }`}
-          >
-            {cat.label}
-          </button>
-        ))}
+        {/* Category Filter Chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 no-scrollbar">
+          {CATEGORY_OPTIONS.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
+                selectedCategory === cat.id
+                  ? 'bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
+                  : 'border border-black/[0.08] dark:border-white/10 bg-white/40 dark:bg-white/[0.03] backdrop-blur-md text-[#737373] hover:text-black dark:hover:text-white'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Special Comparison Banner: All-Purpose vs Cake Flour */}
       {(searchQuery.toLowerCase().includes('ဂျုံ') || searchQuery.toLowerCase().includes('flour')) && (
-        <section className="rounded-3xl bg-linear-to-r from-amber-50 via-orange-50 to-amber-100/60 dark:from-stone-900 dark:via-orange-950/30 dark:to-stone-900 border-2 border-orange-200 dark:border-stone-800 p-5 sm:p-6 shadow-sm space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+        <section className="rounded-2xl bg-white/60 dark:bg-white/[0.035] backdrop-blur-xl border border-black/[0.08] dark:border-white/10 p-5 sm:p-6 space-y-4 animate-in fade-in duration-150 shadow-xs dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <span className="text-2xl p-1.5 bg-white dark:bg-stone-800 rounded-xl shadow-2xs">🌾🥣</span>
+              <span className="p-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-mono font-bold shadow-xs">VS</span>
               <div>
-                <h3 className="font-black text-stone-900 dark:text-white text-sm sm:text-base">
+                <h3 className="font-extrabold uppercase tracking-wide text-black dark:text-white text-sm sm:text-base">
                   {contentLang === 'mm'
                     ? 'ဂျုံမှုန့် (All-Purpose Flour) နှင့် ကိတ်မုန့်ဂျုံ (Cake Flour) အဓိက ကွာခြားချက်များ'
                     : 'Key Differences: All-Purpose Flour vs Cake Flour'}
                 </h3>
-                <p className="text-xs text-orange-950 dark:text-orange-300 font-medium">
+                <p className="text-xs text-[#737373] dark:text-[#A3A3A3] font-medium">
                   {contentLang === 'mm'
                     ? 'မုန့်ဖုတ်ရာတွင် Gluten (ကော်ရည်ကြော) ပါဝင်မှုပေါ်မူတည်၍ မုန့်သားတည်ဆောက်ပုံ ကွာခြားသွားပါသည်'
                     : 'Protein and gluten formation dictate structural tenderness versus chewiness in baked goods'}
                 </p>
               </div>
             </div>
-            <span className="hidden sm:inline-block px-3 py-1 rounded-full text-[11px] font-extrabold bg-orange-600 text-white">
+            <span className="hidden sm:inline-block px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider border border-black/[0.12] dark:border-white/20 text-black dark:text-white bg-white/40 dark:bg-white/[0.03]">
               Comparison Guide
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
             {/* All-Purpose Flour Card */}
-            <div className="bg-white/95 dark:bg-stone-800 p-4 rounded-2xl border border-orange-200/80 dark:border-stone-700 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between pb-1.5 border-b border-stone-100 dark:border-stone-700">
-                <span className="font-extrabold text-sm text-stone-900 dark:text-white flex items-center gap-1.5">
-                  <span>🌾</span> {contentLang === 'mm' ? 'ဂျုံမှုန့် / အိမ်သုံးဂျုံ (All-Purpose)' : 'All-Purpose Flour'}
+            <div className="bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md p-4 rounded-xl border border-black/[0.06] dark:border-white/[0.08] space-y-2">
+              <div className="flex items-center justify-between pb-1.5 border-b border-black/[0.06] dark:border-white/[0.08]">
+                <span className="font-bold text-sm text-black dark:text-white">
+                  {contentLang === 'mm' ? 'ဂျုံမှုန့် / အိမ်သုံးဂျုံ (All-Purpose)' : 'All-Purpose Flour'}
                 </span>
-                <span className="px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-700 text-stone-700 dark:text-stone-300 text-[10px] font-mono font-bold">
+                <span className="px-1.5 py-0.5 rounded-md border border-[#A3A3A3] dark:border-white/20 text-black dark:text-white text-[10px] font-mono font-bold bg-white/40 dark:bg-white/[0.04]">
                   Gluten 10-12%
                 </span>
               </div>
-              <ul className="text-xs text-stone-700 dark:text-stone-300 space-y-1">
+              <ul className="text-xs text-[#525252] dark:text-[#A3A3A3] space-y-1">
                 <li className="flex items-start gap-1">
-                  <span className="text-orange-500 font-bold">•</span>
+                  <span className="text-black dark:text-white font-bold">•</span>
                   <span><strong>Role:</strong> {contentLang === 'mm' ? 'ကော်ရည်ကြော အလယ်အလတ်၊ မုန့်သားကျစ်လျစ်ခိုင်မာစေသည်။' : 'Medium gluten network provides stable, versatile structure.'}</span>
                 </li>
                 <li className="flex items-start gap-1">
-                  <span className="text-orange-500 font-bold">•</span>
+                  <span className="text-black dark:text-white font-bold">•</span>
                   <span><strong>Best for:</strong> {contentLang === 'mm' ? 'ကွတ်ကီး၊ ပန်ကိတ်၊ မာဖင်၊ ပေါင်မုန့်နှင့် ကိတ်မုန့်များအတွက် စွယ်စုံသုံး။' : 'Cookies, muffins, pancakes, quick breads, and standard cakes.'}</span>
                 </li>
               </ul>
             </div>
 
             {/* Cake Flour Card */}
-            <div className="bg-white/95 dark:bg-stone-800 p-4 rounded-2xl border border-orange-200/80 dark:border-stone-700 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between pb-1.5 border-b border-stone-100 dark:border-stone-700">
-                <span className="font-extrabold text-sm text-stone-900 dark:text-white flex items-center gap-1.5">
-                  <span>🥣</span> {contentLang === 'mm' ? 'ကိတ်မုန့်ဂျုံ (Cake Flour)' : 'Cake Flour'}
+            <div className="bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md p-4 rounded-xl border border-black/[0.06] dark:border-white/[0.08] space-y-2">
+              <div className="flex items-center justify-between pb-1.5 border-b border-black/[0.06] dark:border-white/[0.08]">
+                <span className="font-bold text-sm text-black dark:text-white">
+                  {contentLang === 'mm' ? 'ကိတ်မုန့်ဂျုံ (Cake Flour)' : 'Cake Flour'}
                 </span>
-                <span className="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 text-[10px] font-mono font-bold">
+                <span className="px-1.5 py-0.5 rounded-md border border-[#A3A3A3] dark:border-white/20 text-black dark:text-white text-[10px] font-mono font-bold bg-white/40 dark:bg-white/[0.04]">
                   Gluten 7-9% (Low)
                 </span>
               </div>
-              <ul className="text-xs text-stone-700 dark:text-stone-300 space-y-1">
+              <ul className="text-xs text-[#525252] dark:text-[#A3A3A3] space-y-1">
                 <li className="flex items-start gap-1">
-                  <span className="text-orange-500 font-bold">•</span>
+                  <span className="text-black dark:text-white font-bold">•</span>
                   <span><strong>Role:</strong> {contentLang === 'mm' ? 'Gluten အလွန်နည်း၍ ကိတ်မုန့်သားကို အလွန်နူးညံ့ပေါ့ပါးအိစက်စေသည်။' : 'Minimal gluten allows cakes to rise extra light, airy and tender.'}</span>
                 </li>
                 <li className="flex items-start gap-1">
-                  <span className="text-orange-500 font-bold">•</span>
+                  <span className="text-black dark:text-white font-bold">•</span>
                   <span><strong>Best for:</strong> {contentLang === 'mm' ? 'စပေါန့်ခ်ျကိတ်၊ ရှစ်ဖွန်ကိတ်၊ နူးညံ့ပျော့ပျောင်းသော ကိတ်များ။' : 'Sponge cakes, chiffon cakes, delicate cupcakes, and angel food.'}</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="p-3 bg-white/80 dark:bg-stone-800 rounded-2xl border border-amber-200/80 dark:border-stone-700 text-xs text-stone-800 dark:text-stone-200 flex items-start gap-2">
-            <span className="font-bold text-orange-600 shrink-0">💡 Substitution Tip:</span>
+          <div className="p-3 bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md rounded-xl border border-black/[0.06] dark:border-white/[0.08] text-xs text-black dark:text-white flex items-start gap-2 font-mono">
+            <span className="font-bold uppercase shrink-0">Formula Note:</span>
             <span>
               {contentLang === 'mm'
                 ? 'ကိတ်ဂျုံမရှိပါက အိမ်သုံးဂျုံမှုန့် ၈၅ ဂရမ် + ပြောင်းဖူးကစီမှုန့် (Cornstarch) ၁၅ ဂရမ် ရောစပ်ကာ ၂-၃ ကြိမ် ဇကာစစ်သုံးပါက ကိတ်ဂျုံ ၁၀၀ ဂရမ် အဖြစ် အလွယ်တကူ အစားထိုးနိုင်ပါသည်။'
@@ -487,8 +492,8 @@ export const IngredientsPage: React.FC = () => {
         </section>
       )}
 
-      {/* Ingredients Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Ingredients Cards Grid - Frosted Glass Panels */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {filteredIngredients.map(item => {
           const primaryName = getItemName(item);
           const secondaryName = getItemSecondaryName(item);
@@ -501,63 +506,73 @@ export const IngredientsPage: React.FC = () => {
             <div
               key={item.id}
               onClick={() => setSelectedIngredient(item)}
-              className="rounded-3xl bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 p-5 shadow-xs hover:border-orange-300 dark:hover:border-orange-600 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group"
+              className="rounded-2xl bg-white/60 dark:bg-white/[0.035] backdrop-blur-xl border border-black/[0.08] dark:border-white/10 hover:border-black/25 dark:hover:border-white/25 hover:bg-white/80 dark:hover:bg-white/[0.07] p-4 transition-all duration-200 cursor-pointer flex flex-col justify-between group min-w-0 shadow-xs hover:shadow-lg dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
             >
               <div>
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl p-1.5 bg-amber-50 dark:bg-stone-800 rounded-2xl border border-amber-100 dark:border-stone-700">
+                {/* Card Header Divider with Emoji, Category, and Action Buttons */}
+                <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-black/[0.06] dark:border-white/[0.08]">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-8 h-8 rounded-lg bg-black/[0.04] dark:bg-white/[0.06] border border-black/[0.06] dark:border-white/10 flex items-center justify-center text-base shrink-0 shadow-xs">
                       {emoji}
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] truncate">
                       {getCategoryLabel(item.category)}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition">
+                  {/* Properly aligned action buttons */}
+                  <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
                     <button
                       onClick={e => handleOpenEdit(item, e)}
-                      className="p-1.5 rounded-lg text-stone-400 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-stone-800 transition cursor-pointer"
+                      className="p-1.5 rounded-lg text-[#737373] hover:text-black dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
                       title="Edit ingredient"
+                      aria-label={`Edit ${primaryName}`}
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={e => handleDelete(item.id, e)}
-                      className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-stone-800 transition cursor-pointer"
+                      className="p-1.5 rounded-lg text-[#737373] hover:text-black dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
                       title="Delete ingredient"
+                      aria-label={`Delete ${primaryName}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
 
-                <h3 className="font-bold text-stone-900 dark:text-white text-base group-hover:text-orange-600 dark:group-hover:text-orange-400 transition mt-1">
-                  {primaryName}
-                </h3>
-                {secondaryName && (
-                  <div className="text-[11px] font-mono text-stone-400 dark:text-stone-500">
-                    {secondaryName}
-                  </div>
-                )}
+                {/* Typography Hierarchy */}
+                <div className="pt-2.5">
+                  <h3 className="font-bold text-black dark:text-white text-base group-hover:underline transition-all break-words">
+                    {primaryName}
+                  </h3>
+                  {secondaryName && (
+                    <div className="text-xs font-mono text-[#737373] dark:text-[#A3A3A3] mt-0.5">
+                      {secondaryName}
+                    </div>
+                  )}
 
-                <p className="text-xs text-stone-600 dark:text-stone-300 mt-2 line-clamp-2 leading-relaxed">
-                  {usesText}
-                </p>
+                  <p className="text-xs text-[#525252] dark:text-[#A3A3A3] mt-2 line-clamp-2 leading-relaxed break-words">
+                    {usesText}
+                  </p>
 
-                {nutritionText && (
-                  <div className="mt-2 text-[10px] text-amber-900 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-200/50 dark:border-amber-900/40 inline-block font-medium truncate max-w-full">
-                    📊 {nutritionText}
-                  </div>
-                )}
+                  {nutritionText && (
+                    <div className="mt-2.5">
+                      <span className="text-[10px] font-mono text-[#737373] dark:text-[#A3A3A3] bg-black/[0.03] dark:bg-white/[0.04] px-2 py-0.5 rounded-md border border-black/[0.06] dark:border-white/[0.08] inline-block truncate max-w-full">
+                        {nutritionText}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400">
-                <span className="text-orange-600 dark:text-orange-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                  View Details →
+              {/* Card Footer Divider */}
+              <div className="mt-3.5 pt-2.5 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-[#737373] dark:text-[#A3A3A3]">
+                <span className="text-black dark:text-white font-bold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 uppercase tracking-wider">
+                  Details →
                 </span>
-                <span className="text-stone-400 dark:text-stone-500 truncate max-w-[120px]">
-                  {substitutesList.length > 0 ? 'Substitutes Available' : 'Core Ingredient'}
+                <span className="truncate max-w-[130px] uppercase text-[10px] font-bold">
+                  {substitutesList.length > 0 ? `${substitutesList.length} Substitutes` : 'Core Ingredient'}
                 </span>
               </div>
             </div>
@@ -566,79 +581,79 @@ export const IngredientsPage: React.FC = () => {
       </div>
 
       {filteredIngredients.length === 0 && (
-        <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 p-8">
-          <Wheat className="w-10 h-10 text-stone-300 mx-auto mb-2" />
-          <p className="text-stone-600 dark:text-stone-300 font-semibold text-sm">
+        <div className="text-center py-12 bg-white/60 dark:bg-white/[0.035] backdrop-blur-xl rounded-2xl border border-black/[0.08] dark:border-white/10 p-8">
+          <Wheat className="w-8 h-8 text-[#737373] mx-auto mb-2" />
+          <p className="text-black dark:text-white font-bold text-sm">
             No matching ingredients found for "{searchQuery}"
           </p>
           <div className="mt-3 flex justify-center gap-2">
             <button
               onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
-              className="px-3 py-1.5 rounded-xl bg-orange-100 dark:bg-orange-950 text-orange-800 dark:text-orange-300 text-xs font-bold"
+              className="px-3 py-1.5 rounded-lg border border-black dark:border-white text-black dark:text-white text-xs font-mono font-bold uppercase tracking-wider"
             >
               Show All
             </button>
             <button
               onClick={handleOpenAdd}
-              className="px-3 py-1.5 rounded-xl bg-orange-600 text-white text-xs font-bold"
+              className="px-3 py-1.5 rounded-lg bg-black text-white dark:bg-white dark:text-black text-xs font-mono font-bold uppercase tracking-wider shadow-xs"
             >
-              Add New Ingredient
+              Add New
             </button>
           </div>
         </div>
       )}
 
-      {/* FULL DETAIL MODAL (Matching contentLang) */}
+      {/* FULL DETAIL MODAL - Frosted Glass Window */}
       {selectedIngredient && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-stone-900 p-6 sm:p-7 shadow-2xl border border-stone-200 dark:border-stone-800 animate-in fade-in zoom-in-95 duration-150 space-y-4">
-            <div className="flex items-start justify-between pb-3 border-b border-stone-100 dark:border-stone-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-md p-4">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white/90 dark:bg-[#0c0f17]/90 backdrop-blur-2xl p-6 sm:p-7 border border-black/10 dark:border-white/15 space-y-4 shadow-2xl">
+            <div className="flex items-start justify-between pb-3 border-b border-black/[0.08] dark:border-white/10">
               <div className="flex items-start gap-3">
-                <span className="text-4xl p-2 bg-amber-50 dark:bg-stone-800 rounded-2xl border border-amber-100 dark:border-stone-700">
+                <span className="text-3xl p-2.5 bg-black/[0.04] dark:bg-white/[0.06] rounded-xl border border-black/[0.06] dark:border-white/10 shadow-xs">
                   {selectedIngredient.image_emoji || '🌾'}
                 </span>
                 <div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3]">
                     {getCategoryLabel(selectedIngredient.category)}
                   </span>
-                  <h3 className="text-lg sm:text-xl font-bold text-stone-900 dark:text-white mt-1">
+                  <h3 className="text-base sm:text-lg font-bold text-black dark:text-white mt-0.5">
                     {getItemName(selectedIngredient)}
                   </h3>
-                  <div className="text-xs font-mono text-stone-400 dark:text-stone-500">
+                  <div className="text-xs font-mono text-[#737373] dark:text-[#A3A3A3]">
                     {getItemSecondaryName(selectedIngredient)}
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedIngredient(null)}
-                className="p-1.5 rounded-xl text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
+                className="p-1.5 rounded-lg text-[#737373] hover:text-black dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08] cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-3.5 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
+            <div className="space-y-3 text-xs sm:text-sm text-[#171717] dark:text-[#E5E5E5]">
               {/* Uses / Purpose */}
-              <div className="p-3.5 rounded-2xl bg-orange-50/70 dark:bg-orange-950/30 border border-orange-100 dark:border-stone-800">
-                <h4 className="font-bold text-orange-950 dark:text-orange-300 mb-1 flex items-center gap-1.5">
-                  <Info className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                  <span>{contentLang === 'mm' ? 'မုန့်လုပ်ရာမှာ ဘာလို့သုံးလဲ (Uses & Purpose)' : 'Role in Baking & Purpose'}</span>
+              <div className="p-3.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.06] dark:border-white/[0.08]">
+                <h4 className="font-bold text-black dark:text-white mb-1 uppercase tracking-wider font-mono text-xs flex items-center gap-1.5">
+                  <Info className="w-3.5 h-3.5" />
+                  <span>{contentLang === 'mm' ? 'မုန့်လုပ်ရာတွင် သုံးပုံ (Purpose)' : 'Role & Purpose in Baking'}</span>
                 </h4>
-                <p className="leading-relaxed text-stone-700 dark:text-stone-300">
+                <p className="leading-relaxed text-[#525252] dark:text-[#A3A3A3]">
                   {getItemUses(selectedIngredient)}
                 </p>
               </div>
 
               {/* Substitutes */}
               {getItemSubstitutes(selectedIngredient).length > 0 && (
-                <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40">
-                  <h4 className="font-bold text-emerald-950 dark:text-emerald-300 mb-1.5">
+                <div className="p-3.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.06] dark:border-white/[0.08]">
+                  <h4 className="font-bold text-black dark:text-white mb-1.5 uppercase tracking-wider font-mono text-xs">
                     {contentLang === 'mm' ? 'အစားထိုးနည်းများ (Substitutes)' : 'Recommended Substitutions'}
                   </h4>
-                  <ul className="text-emerald-950 dark:text-emerald-200 space-y-1.5">
+                  <ul className="text-[#525252] dark:text-[#A3A3A3] space-y-1">
                     {getItemSubstitutes(selectedIngredient).map((sub, i) => (
                       <li key={i} className="flex items-start gap-1.5">
-                        <span className="text-emerald-600 font-bold">•</span>
+                        <span className="text-black dark:text-white font-bold">•</span>
                         <span>{sub}</span>
                       </li>
                     ))}
@@ -647,22 +662,22 @@ export const IngredientsPage: React.FC = () => {
               )}
 
               {/* Storage */}
-              <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700">
-                <h4 className="font-bold text-stone-900 dark:text-white mb-1">
+              <div className="p-3.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.06] dark:border-white/[0.08]">
+                <h4 className="font-bold text-black dark:text-white mb-1 uppercase tracking-wider font-mono text-xs">
                   {contentLang === 'mm' ? 'သိမ်းဆည်းနည်း (Storage)' : 'Storage Guidelines'}
                 </h4>
-                <p className="leading-relaxed text-stone-600 dark:text-stone-300">
+                <p className="leading-relaxed text-[#525252] dark:text-[#A3A3A3]">
                   {getItemStorage(selectedIngredient)}
                 </p>
               </div>
 
               {/* Nutrition */}
               {getItemNutrition(selectedIngredient) && (
-                <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/50 text-amber-950 dark:text-amber-300">
-                  <h4 className="font-bold mb-1">
+                <div className="p-3.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.06] dark:border-white/[0.08]">
+                  <h4 className="font-bold text-black dark:text-white mb-1 uppercase tracking-wider font-mono text-xs">
                     {contentLang === 'mm' ? 'အာဟာရနှင့် ဂုဏ်သတ္တိ (Nutrition & Properties)' : 'Nutrition & Baking Properties'}
                   </h4>
-                  <p>{getItemNutrition(selectedIngredient)}</p>
+                  <p className="text-[#525252] dark:text-[#A3A3A3]">{getItemNutrition(selectedIngredient)}</p>
                 </div>
               )}
             </div>
@@ -670,14 +685,14 @@ export const IngredientsPage: React.FC = () => {
             <div className="pt-2 flex gap-2">
               <button
                 onClick={() => handleOpenEdit(selectedIngredient)}
-                className="flex-1 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <Edit3 className="w-3.5 h-3.5" />
                 <span>Edit Ingredient</span>
               </button>
               <button
                 onClick={() => setSelectedIngredient(null)}
-                className="px-4 py-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs font-bold transition cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/40 dark:bg-white/[0.04] hover:bg-white/80 dark:hover:bg-white/[0.08] text-black dark:text-white text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer"
               >
                 Close
               </button>
@@ -686,17 +701,17 @@ export const IngredientsPage: React.FC = () => {
         </div>
       )}
 
-      {/* ADD / EDIT FORM MODAL (English UI) */}
+      {/* ADD / EDIT FORM MODAL - Frosted Glass Window */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-stone-900 p-6 sm:p-7 shadow-2xl border border-stone-200 dark:border-stone-800 animate-in fade-in zoom-in-95 duration-150 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-stone-800">
-              <h3 className="font-extrabold text-stone-900 dark:text-white text-base sm:text-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-md p-4">
+          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white/90 dark:bg-[#0c0f17]/90 backdrop-blur-2xl p-6 sm:p-7 border border-black/10 dark:border-white/15 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-black/[0.08] dark:border-white/10">
+              <h3 className="font-extrabold uppercase tracking-wide text-black dark:text-white text-sm sm:text-base">
                 {editingId ? 'Edit Ingredient' : 'Add New Ingredient'}
               </h3>
               <button
                 onClick={() => setIsFormOpen(false)}
-                className="p-1.5 rounded-xl text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 cursor-pointer"
+                className="p-1.5 rounded-lg text-[#737373] hover:text-black dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08] cursor-pointer"
               >
                 ✕
               </button>
@@ -705,20 +720,20 @@ export const IngredientsPage: React.FC = () => {
             <form onSubmit={handleSaveForm} className="space-y-3.5 text-xs">
               {/* Emoji Picker */}
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
                   Emoji Icon
                 </label>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl p-2 bg-stone-100 dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700">
+                  <span className="text-xl p-2 bg-black/[0.04] dark:bg-white/[0.06] rounded-xl border border-black/[0.06] dark:border-white/10 shadow-xs">
                     {formData.image_emoji || '🌾'}
                   </span>
                   <input
                     type="text"
                     value={formData.image_emoji}
                     onChange={e => setFormData({ ...formData, image_emoji: e.target.value })}
-                    className="w-24 px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-700 text-center font-mono text-sm bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100"
+                    className="w-20 px-3 py-1.5 rounded-xl border border-black/[0.12] dark:border-white/15 text-center font-mono text-sm bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white"
                   />
-                  <span className="text-[11px] text-stone-400">or pick below:</span>
+                  <span className="text-[11px] font-mono text-[#737373] dark:text-[#A3A3A3]">or choose:</span>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {COMMON_EMOJIS.map(em => (
@@ -726,7 +741,7 @@ export const IngredientsPage: React.FC = () => {
                       key={em}
                       type="button"
                       onClick={() => setFormData({ ...formData, image_emoji: em })}
-                      className="p-1.5 rounded-lg hover:bg-amber-100 dark:hover:bg-stone-800 text-base"
+                      className="p-1.5 rounded-lg hover:bg-black/[0.05] dark:hover:bg-white/[0.08] text-base transition-colors"
                     >
                       {em}
                     </button>
@@ -737,7 +752,7 @@ export const IngredientsPage: React.FC = () => {
               {/* Names */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
                     English Name *
                   </label>
                   <input
@@ -746,32 +761,32 @@ export const IngredientsPage: React.FC = () => {
                     value={formData.name_en}
                     onChange={e => setFormData({ ...formData, name_en: e.target.value })}
                     placeholder="e.g. Cake Flour"
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
+                    className="w-full px-3 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white focus:outline-hidden focus:border-black dark:focus:border-white"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Myanmar Name (မြန်မာအမည်)
+                  <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
+                    Myanmar Name
                   </label>
                   <input
                     type="text"
                     value={formData.name_mm}
                     onChange={e => setFormData({ ...formData, name_mm: e.target.value })}
                     placeholder="e.g. ကိတ်မုန့်ဂျုံ"
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
+                    className="w-full px-3 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white focus:outline-hidden focus:border-black dark:focus:border-white"
                   />
                 </div>
               </div>
 
               {/* Category */}
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
                   Category
                 </label>
                 <select
                   value={formData.category}
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white focus:outline-hidden focus:border-black dark:focus:border-white"
                 >
                   <option value="flour">Flour & Starches</option>
                   <option value="leavening">Leavening Agents</option>
@@ -785,27 +800,27 @@ export const IngredientsPage: React.FC = () => {
               {/* Uses */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Uses in Baking (English)
+                  <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
+                    Uses (English)
                   </label>
                   <textarea
                     rows={2}
                     value={formData.uses_en}
                     onChange={e => setFormData({ ...formData, uses_en: e.target.value })}
-                    placeholder="Controls gluten formation to produce delicate, tender crumb..."
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
+                    placeholder="Role in baking structure..."
+                    className="w-full px-3 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white focus:outline-hidden focus:border-black dark:focus:border-white"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Uses in Baking (Myanmar)
+                  <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
+                    Uses (Myanmar)
                   </label>
                   <textarea
                     rows={2}
                     value={formData.uses_mm}
                     onChange={e => setFormData({ ...formData, uses_mm: e.target.value })}
-                    placeholder="ကိတ်မုန့်သား နူးညံ့အိစက်စေရန် သုံးသည်..."
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
+                    placeholder="ကိတ်မုန့်သား နူးညံ့အိစက်စေရန်..."
+                    className="w-full px-3 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white focus:outline-hidden focus:border-black dark:focus:border-white"
                   />
                 </div>
               </div>
@@ -813,71 +828,43 @@ export const IngredientsPage: React.FC = () => {
               {/* Substitutes */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Substitutes (English - one per line)
+                  <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
+                    Substitutes (English)
                   </label>
                   <textarea
                     rows={2}
                     value={formData.substitutes_en_str}
                     onChange={e => setFormData({ ...formData, substitutes_en_str: e.target.value })}
-                    placeholder="85g all-purpose flour + 15g cornstarch..."
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
+                    placeholder="85g AP flour + 15g cornstarch..."
+                    className="w-full px-3 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white focus:outline-hidden focus:border-black dark:focus:border-white"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Substitutes (Myanmar - one per line)
+                  <label className="block font-mono font-bold uppercase tracking-wider text-[#737373] dark:text-[#A3A3A3] mb-1">
+                    Substitutes (Myanmar)
                   </label>
                   <textarea
                     rows={2}
                     value={formData.substitutes_mm_str}
                     onChange={e => setFormData({ ...formData, substitutes_mm_str: e.target.value })}
                     placeholder="အိမ်သုံးဂျုံ ၈၅g + ပြောင်းဖူးကစီ ၁၅g..."
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
-                  />
-                </div>
-              </div>
-
-              {/* Storage */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Storage (English)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.storage_en}
-                    onChange={e => setFormData({ ...formData, storage_en: e.target.value })}
-                    placeholder="Airtight container in a cool, dry pantry..."
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                    Storage (Myanmar)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.storage_mm}
-                    onChange={e => setFormData({ ...formData, storage_mm: e.target.value })}
-                    placeholder="အေးမြခြောက်သွေ့သော နေရာတွင် သိမ်းပါ..."
-                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-100 focus:bg-white focus:border-orange-500"
+                    className="w-full px-3 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md text-black dark:text-white focus:outline-hidden focus:border-black dark:focus:border-white"
                   />
                 </div>
               </div>
 
               {/* Submit Buttons */}
-              <div className="pt-2 flex justify-end gap-2">
+              <div className="pt-2 flex justify-end gap-2 font-mono">
                 <button
                   type="button"
                   onClick={() => setIsFormOpen(false)}
-                  className="px-4 py-2 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-black/[0.12] dark:border-white/15 text-black dark:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08] transition-all cursor-pointer uppercase tracking-wider text-xs font-bold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold transition shadow-xs cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-bold transition-all cursor-pointer uppercase tracking-wider text-xs shadow-xs"
                 >
                   {editingId ? 'Save Changes' : 'Add Ingredient'}
                 </button>
